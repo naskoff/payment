@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="{{ app.request.locale }}">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Payment Demo{% endblock %}</title>
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+    {% block javascripts %}
+        <script type="text/javascript">const BASE_URI = '{{ path('home') }}';</script>
+        <script src="https://js.stripe.com/v3/" async defer></script>
+        <script src="https://www.paypal.com/sdk/js?client-id={{ paypal_client_id }}" async defer></script>
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+</head>
+<body>
+<nav class="navbar navbar-expand-md navbar-light bg-light">
+    <div class="container-xxl">
+        <a class="navbar-brand" href="{{ path('home') }}">!Demo</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item ms-2">
+                    <a href="#" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#donate">
+                        Donate
+                    </a>
+                </li>
+                {% if app.user %}
+                    <li class="nav-item ms-2">
+                        <a href="{{ path('create_post') }}" class="btn btn-primary">Create a post</a>
+                    </li>
+                {% endif %}
+            </ul>
+            <div class="navbar-nav">
+                {% if not app.user %}
+                    <a href="{{ path('app_login') }}" class="btn ms-2">Sign In</a>
+                    <a href="{{ path('app_register') }}" class="btn btn-primary ms-2">Sign Up</a>
+                {% else %}
+                    <a href="{{ path('app_logout') }}" class="btn btn-outline-primary ms-2">Logout</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>
+{% block body %}
+{% endblock %}
+<div class="modal fade" id="donate"
+     data-bs-backdrop="static" data-bs-keyboard="false"
+     aria-labelledby="donate" aria-hidden="true" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content text-center">
+            <div class="modal-header">
+                <h5 class="modal-title" id="donate-label">Donate</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger alert-dismissible fade show" id="error-message"
+                     role="alert" style="display: none;">
+                    <strong>Error!</strong> <span class="alert-message"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <div id="select-payment-provider" class="payment-steps">
+                    <div class="h4 mb-3">Are you sure want to donate 0.01$</div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="payment-type" id="payment-paypal"
+                               value="paypal">
+                        <label class="form-check-label" for="payment-paypal">PayPal</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="payment-type" id="payment-stripe"
+                               value="stripe">
+                        <label class="form-check-label" for="payment-stripe">Stripe</label>
+                    </div>
+                </div>
+                <div id="payment-success" class="payment-steps" style="display: none">
+                    <div class="alert alert-success" role="alert">
+                        <strong>Hooray!</strong> Your payment was successful
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btn-close" class="btn me-auto" data-bs-dismiss="modal" style="display: none">
+                    Close
+                </button>
+                <button type="button" id="back-to-payment-choice" class="btn btn-outline-primary" style="display: none">
+                    Back
+                </button>
+                <button type="button" id="continue-to-stripe" class="btn btn-primary" style="display: none">Continue to
+                    payment
+                </button>
+                <div class="btn" id="paypal-button-container" style="display: none"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
