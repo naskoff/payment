@@ -4,7 +4,7 @@
 
 {% block body %}
     <div class="container">
-        <div class="row">
+        <div class="row g-3 my-3">
             {{ form_start(form, {'attr': {'action': path('create_post')}}) }}
             {{ form_rest(form) }}
             {{ form_end(form) }}
