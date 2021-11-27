@@ -3,7 +3,8 @@ twig:
     form_themes: [ 'bootstrap_5_layout.html.twig' ]
     globals:
         paypal_client_id: '%env(PAYPAL_CLIENT_ID)%'
-        paypal_client_secret: '%env(PAYPAL_CLIENT_SECRET)%'
+        stripe_publish_key: '%env(STRIPE_PUBLISH_KEY)%'
+        stripe_secret_key: '%env(STRIPE_SECRET_KEY)%'
 
 when@test:
     twig:

@@ -1,0 +1,31 @@
+<nav class="navbar navbar-expand-md navbar-light bg-light">
+    <div class="container-xxl">
+        <a class="navbar-brand" href="{{ path('home') }}">!Demo</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item ms-2">
+                    <a href="#" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#donate">
+                        Donate
+                    </a>
+                </li>
+                {% if app.user %}
+                    <li class="nav-item ms-2">
+                        <a href="{{ path('create_post') }}" class="btn btn-primary">Create a post</a>
+                    </li>
+                {% endif %}
+            </ul>
+            <div class="navbar-nav">
+                {% if not app.user %}
+                    <a href="{{ path('app_login') }}" class="btn ms-2">Sign In</a>
+                    <a href="{{ path('app_register') }}" class="btn btn-primary ms-2">Sign Up</a>
+                {% else %}
+                    <a href="{{ path('app_logout') }}" class="btn btn-outline-primary ms-2">Logout</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>
