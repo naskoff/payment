@@ -3,23 +3,21 @@
 {% block title %}Hello HomeController!{% endblock %}
 
 {% block body %}
-    <div class="container">
-        <div class="row g-3 my-3">
-            {% for item in pagination %}
-                <div class="col-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ item.title }}</h5>
-                            <p class="card-text">{{ item.content }}</p>
-                            <a href="{{ path('view_post', {id: item.id}) }}" class="btn btn-sm btn-primary">Read</a>
-                        </div>
+    <div class="row g-3 my-3">
+        {% for item in pagination %}
+            <div class="col-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.title }}</h5>
+                        <p class="card-text">{{ item.content }}</p>
+                        <a href="{{ path('view_post', {id: item.id}) }}" class="btn btn-sm btn-primary">Read</a>
                     </div>
                 </div>
-            {% else %}
-            {% endfor %}
-        </div>
-        <nav class="btn-toolbar justify-content-end">
-            {{ knp_pagination_render(pagination) }}
-        </nav>
+            </div>
+        {% else %}
+        {% endfor %}
     </div>
+    <nav class="btn-toolbar justify-content-end">
+        {{ knp_pagination_render(pagination) }}
+    </nav>
 {% endblock %}

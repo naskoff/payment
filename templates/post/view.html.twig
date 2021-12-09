@@ -3,24 +3,17 @@
 {% block title %}Create new post{% endblock %}
 
 {% block body %}
-    <div class="container">
-        <div class="row">
-            <div class="card">
-                <div class="card-header">
-                    test
-                </div>
-                <div class="card-body">
-                    <h3 class="card-title">{{ data.title }}</h3>
-                    <div class="small">{{ data.createdAt|date('d.m.Y') }}</div>
-                    <div class="card-text">{{ data.content }}</div>
-                </div>
-                {% if data.user == app.user %}
-                    <div class="card-footer">
-                        <button class="btn btn-primary">Edit</button>
-                        <button class="btn btn-warning">Boost!</button>
-                    </div>
-                {% endif %}
-            </div>
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title">{{ data.title }}</h3>
+            <div class="card-subtitle text-muted">{{ data.createdAt|date('d.m.Y') }}</div>
+            <div class="card-text">{{ data.content }}</div>
         </div>
+        {% if data.user == app.user %}
+            <div class="card-footer">
+                <button class="btn btn-primary">Edit</button>
+                <button class="btn btn-warning">Boost!</button>
+            </div>
+        {% endif %}
     </div>
 {% endblock %}
