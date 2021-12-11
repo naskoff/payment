@@ -3,12 +3,15 @@
 namespace App\Controller;
 
 use DateTime;
+use Stripe\Stripe;
 use App\Entity\User;
 use App\Entity\Order;
 use App\Entity\Website;
+use Stripe\PaymentIntent;
 use PayPalHttp\IOException;
 use PayPalHttp\HttpResponse;
 use PayPalHttp\HttpException;
+use Stripe\Exception\ApiErrorException;
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +26,7 @@ class OrderController extends AbstractController
     /**
      * @Route("/order/paypal", name="order", methods={"POST"})
      */
-    public function index(Request $request): JsonResponse
+    public function orderPayPal(Request $request): JsonResponse
     {
 
         try {
@@ -31,9 +34,6 @@ class OrderController extends AbstractController
         } catch (HttpException | IOException $e) {
             return new JsonResponse(['errors' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
         }
-
-        file_put_contents("C:/Users/zlatin.hristov/Desktop/response.txt",
-            print_r($response, true) . PHP_EOL, FILE_APPEND);
 
         if (empty($response)) {
             return new JsonResponse(['errors' => 'order not found'], Response::HTTP_BAD_REQUEST);
@@ -80,5 +80,26 @@ class OrderController extends AbstractController
         $request = new OrdersCaptureRequest($orderId);
 
         return $paypalHttpClient->execute($request);
+    }
+
+    /**
+     * @Route("/payment-intent", name="payment_intent")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function paymentIntent(Request $request): JsonResponse
+    {
+        Stripe::setApiKey($this->getParameter('stripe_secret_key'));
+        try {
+//            $paymentIntent = PaymentIntent::create([
+//                'amount' => $request->request->get('amount'),
+//                'currency' => 'usd',
+//            ]);
+        } catch (ApiErrorException $e) {
+            return $this->json(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
+        }
+
+//        return $this->json(['clientSecret' => $paymentIntent->client_secret]);
+        return $this->json(['clientSecret' => 'pi_3K5JmDHMgMXMO0Sb1UGVpjJX_secret_ygXNHZOlCqUV8ILod2OgYwd4s']);
     }
 }
