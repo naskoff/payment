@@ -113,17 +113,17 @@ document.getElementById('donate').addEventListener('show.bs.modal', function (e)
 
 let elements;
 
+initPayPal.then(() => {
+  initPayPalButton().render('#paypal-button-container');
+}).catch(e => console.error(e));
+
+initStripe.then(() => {
+  stripe = Stripe(SETTINGS.STRIPE_PUBLISH_KEY);
+}).catch(e => console.error(e));
+
 $(function () {
 
   'use strict';
-
-  initPayPal.then(() => {
-    initPayPalButton().render('#paypal-button-container');
-  }).catch(e => console.error(e));
-
-  initStripe.then(() => {
-    stripe = Stripe(SETTINGS.STRIPE_PUBLISH_KEY);
-  }).catch(e => console.error(e));
 
   $('.btn-donate').on('click', function (e) {
     e.preventDefault();
@@ -148,5 +148,5 @@ $(function () {
       $('#stripe-form').show();
       showButtons('stripe-pay-now');
     }, 'json');
-  })
+  });
 });
