@@ -28,22 +28,18 @@
                 </div>
                 <div id="stripe-form" class="payment-steps" style="display: none;">
                     <form id="payment-form">
-                        <div id="payment-element">
-                            <div class="mb-3">
-                                <label for="formGroupExampleInput" class="form-label">Example label</label>
-                                <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Example input placeholder">
+                        <div class="mb-3">
+                            <label for="cardNumber" class="form-label">Card number</label>
+                            <div id="cardNumber" class="form-control"></div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="cardExpiry" class="form-label">Expire</label>
+                                <div id="cardExpiry" class="form-control"></div>
                             </div>
-                            <div class="mb-3">
-                                <label for="formGroupExampleInput2" class="form-label">Another label</label>
-                                <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Another input placeholder">
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <input type="text" class="form-control" placeholder="First name" aria-label="First name">
-                                </div>
-                                <div class="col">
-                                    <input type="text" class="form-control" placeholder="Last name" aria-label="Last name">
-                                </div>
+                            <div class="col">
+                                <label for="cardCvc" class="form-label">CVC</label>
+                                <div id="cardCvc" class="form-control"></div>
                             </div>
                         </div>
                     </form>

@@ -66,8 +66,13 @@ const initStripeForm = function (clientSecret) {
     labels: 'floating',
     fields: {address: 'never'}
   });
-  const paymentElements = elements.create('payment');
-  paymentElements.mount('#payment-element');
+  const cardNumber = elements.create('cardNumber');
+  cardNumber.mount('#cardNumber');
+  const cardExpiry = elements.create('cardExpiry');
+  cardExpiry.mount('#cardExpiry');
+  const cardCvc = elements.create('cardCvc');
+  cardCvc.mount('#cardCvc');
+  cardNumber.blur();
 }
 
 const showButtons = function (option) {
