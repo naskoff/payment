@@ -64,7 +64,7 @@ const initStripeForm = function (clientSecret) {
   elements = stripe.elements({clientSecret}, {
     theme: 'stripe',
     labels: 'floating',
-    fields: {billingDetails: 'never'}
+    fields: {address: 'never'}
   });
   const paymentElements = elements.create('payment');
   paymentElements.mount('#payment-element');
@@ -76,7 +76,7 @@ const showButtons = function (option) {
     $('#paypal-button-container').show();
   } else if (option === 'stripe') {
     $('#continue-to-stripe').show();
-  } else if (option === 'stripe-pay') {
+  } else if (option === 'stripe-pay-now') {
     $('#stripe-pay-now').show();
   }
 }
