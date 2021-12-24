@@ -91,15 +91,18 @@ class OrderController extends AbstractController
     {
         Stripe::setApiKey($this->getParameter('stripe_secret_key'));
         try {
-//            $paymentIntent = PaymentIntent::create([
-//                'amount' => $request->request->get('amount'),
-//                'currency' => 'usd',
-//            ]);
+            $paymentIntent = PaymentIntent::create([
+                'amount' => $request->request->get('amount'),
+                'currency' => 'usd',
+            ]);
         } catch (ApiErrorException $e) {
             return $this->json(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
         }
 
-//        return $this->json(['clientSecret' => $paymentIntent->client_secret]);
-        return $this->json(['clientSecret' => 'pi_3K5JmDHMgMXMO0Sb1UGVpjJX_secret_ygXNHZOlCqUV8ILod2OgYwd4s']);
+        return $this->json(['clientSecret' => $paymentIntent->client_secret]);
+    }
+
+    public function confirmStripeOrder() {
+
     }
 }

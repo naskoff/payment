@@ -66,13 +66,51 @@ const initStripeForm = function (clientSecret) {
     labels: 'floating',
     fields: {address: 'never'}
   });
-  const cardNumber = elements.create('cardNumber');
+  const style = {
+    base: {
+      color: "#32325d",
+      fontFamily: 'Arial, sans-serif',
+      fontSmoothing: "antialiased",
+      fontSize: "16px",
+      "::placeholder": {
+        color: "#32325d"
+      }
+    },
+    invalid: {
+      fontFamily: 'Arial, sans-serif',
+      color: "#fa755a",
+      iconColor: "#fa755a"
+    }
+  };
+  const cardNumber = elements.create('cardNumber', {style});
   cardNumber.mount('#cardNumber');
-  const cardExpiry = elements.create('cardExpiry');
+  const cardExpiry = elements.create('cardExpiry', {style});
   cardExpiry.mount('#cardExpiry');
-  const cardCvc = elements.create('cardCvc');
+  const cardCvc = elements.create('cardCvc', {style});
   cardCvc.mount('#cardCvc');
+  cardNumber.on('change', function (event) {
+    $('#stripe-pay-now').attr('disable', event.empty);
+    $('#error-message').empty().html(event.error ? event.error.message : '');
+  });
+  $('#stripe-pay-now').on('click', function (e) {
+    e.preventDefault();
+    handleSubmit(clientSecret, cardNumber);
+  });
+
   cardNumber.blur();
+}
+
+const handleSubmit = function (clientSecret, cardNumber) {
+  stripe.confirmCardPayment(clientSecret, {payment_method: {card: cardNumber}}).then((data) => {
+    console.log(data);
+    if (data.error) {
+      $('#error-message').empty().html(data.error ? data.error.message : 'Error occurred');
+    } else {
+      $.post(SETTINGS.BASE_URI + 'payment-intent/confirm', {paymentIntentId: data.paymentIntent.id}, function(data){
+
+      });
+    }
+  });
 }
 
 const showButtons = function (option) {
@@ -138,10 +176,6 @@ $(function () {
   $('.btn-boost').on('click', function (e) {
     e.preventDefault();
     PaymentDialog.init().changeTitle('Boost').open();
-  });
-
-  $('#stripe-pay-now').on('click', function (e) {
-    e.preventDefault();
   });
 
   $('#continue-to-stripe').on('click', function (e) {
