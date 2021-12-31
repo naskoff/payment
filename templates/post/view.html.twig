@@ -9,11 +9,11 @@
             <div class="card-subtitle text-muted">{{ data.createdAt|date('d.m.Y') }}</div>
             <div class="card-text">{{ data.content }}</div>
         </div>
-        {% if data.user == app.user %}
-            <div class="card-footer">
+        <div class="card-footer">
+            {% if data.user == app.user %}
                 <button class="btn btn-primary">Edit</button>
-                <button class="btn btn-warning btn-boost">Boost!</button>
-            </div>
-        {% endif %}
+            {% endif %}
+            <button class="btn btn-warning btn-boost" data-amounts="[0.03]">Boost!</button>
+        </div>
     </div>
 {% endblock %}
