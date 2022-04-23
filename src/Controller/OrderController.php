@@ -31,7 +31,7 @@ class OrderController extends AbstractController
 
         try {
             $response = $this->captureOrder($request->request->get('orderId'));
-        } catch (HttpException | IOException $e) {
+        } catch (HttpException|IOException $e) {
             return new JsonResponse(['errors' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
         }
 
@@ -83,6 +83,34 @@ class OrderController extends AbstractController
     }
 
     /**
+     * @Route("/payment-intent/confirm", name="payment_intent_confirm")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function paymentIntentConfirm(Request $request): JsonResponse
+    {
+        Stripe::setApiKey($this->getParameter('stripe_secret_key'));
+
+        try {
+            $order = PaymentIntent::retrieve($request->request->get('paymentIntentId', null));
+        } catch (ApiErrorException $e) {
+            return $this->json(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
+        }
+
+        $orderEntity = (new Order())
+            ->setOrderId($order['id'])
+            ->setAmount($order['amount']/100)
+            ->setProvider(Order::PROVIDER_STRIPE)
+            ->setStatus(Order::STATUS_CONFIRM)
+            ->setCreatedAt(new DateTime());
+
+        $this->getDoctrine()->getManager()->persist($orderEntity);
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->json(['order' => $order]);
+    }
+
+    /**
      * @Route("/payment-intent", name="payment_intent")
      * @param Request $request
      * @return JsonResponse
@@ -90,6 +118,7 @@ class OrderController extends AbstractController
     public function paymentIntent(Request $request): JsonResponse
     {
         Stripe::setApiKey($this->getParameter('stripe_secret_key'));
+
         try {
             $paymentIntent = PaymentIntent::create([
                 'amount' => $request->request->get('amount'),
@@ -100,9 +129,5 @@ class OrderController extends AbstractController
         }
 
         return $this->json(['clientSecret' => $paymentIntent->client_secret]);
-    }
-
-    public function confirmStripeOrder() {
-
     }
 }

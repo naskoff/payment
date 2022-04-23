@@ -10,6 +10,7 @@ import * as bootstrap from 'bootstrap';
 import './styles/app.css';
 
 let stripe;
+let elements;
 
 const initJSScript = function (src, resolve, reject) {
   const script = document.createElement('script');
@@ -35,6 +36,10 @@ const initPayPal = new Promise((resolve, reject) => {
     resolve();
   }
 });
+
+const selectStep = document.getElementById('select-payment-provider');
+const stripeFormStep = document.getElementById('stripe-form');
+const successStep = document.getElementById('payment-success');
 
 const initPayPalButton = function () {
   return paypal.Buttons({
@@ -106,9 +111,13 @@ const handleSubmit = function (clientSecret, cardNumber) {
     if (data.error) {
       $('#error-message').empty().html(data.error ? data.error.message : 'Error occurred');
     } else {
-      $.post(SETTINGS.BASE_URI + 'payment-intent/confirm', {paymentIntentId: data.paymentIntent.id}, function(data){
-
-      });
+      $.post(SETTINGS.BASE_URI + 'payment-intent/confirm', {paymentIntentId: data.paymentIntent.id})
+        .done(function (response) {
+          console.log(['response', response]);
+        })
+        .fail((error) => {
+          $('#error-message').empty().html(error ? error : 'Error occurred');
+        });
     }
   });
 }
@@ -154,7 +163,14 @@ document.getElementById('donate').addEventListener('show.bs.modal', function (e)
   showButtons(paymentType.val());
 });
 
-let elements;
+document.getElementById('donate').addEventListener('hide.bs.modal', function (e) {
+  const paymentType = $('input[name=payment-type]');
+  paymentType.on('change', function (e) {
+    const option = $(this).val();
+    showButtons(option);
+  });
+  showButtons(paymentType.val());
+});
 
 initPayPal.then(() => {
   initPayPalButton().render('#paypal-button-container');
@@ -165,19 +181,15 @@ initStripe.then(() => {
 }).catch(e => console.error(e));
 
 $(function () {
-
   'use strict';
-
   $('.btn-donate').on('click', function (e) {
     e.preventDefault();
     PaymentDialog.init().changeTitle('Donate').open();
   });
-
   $('.btn-boost').on('click', function (e) {
     e.preventDefault();
     PaymentDialog.init().changeTitle('Boost').open();
   });
-
   $('#continue-to-stripe').on('click', function (e) {
     e.preventDefault();
     $.post(SETTINGS.BASE_URI + 'payment-intent', {amount: '100'}, function (response) {
